@@ -1,12 +1,12 @@
 import Foundation
 
-/// Drives the score refresh loop (PRD v1.0 §1).
+/// Drives the score refresh loop.
 ///
 /// Reliability guarantees:
 /// - Each fetch is timed; latency + timestamp are reported to `DiagnosticsStore`.
 /// - A fetch that comes back empty while we already hold data is treated as a
 ///   transient failure: the previous snapshot is kept so the UI never blanks
-///   out on a hiccup (§1, "never clear the UI to an empty state").
+///   out on a hiccup — never clear the UI to an empty state.
 /// - On repeated empty results the poll interval backs off geometrically up to
 ///   a ceiling, so a sustained outage doesn't hammer the network.
 @MainActor

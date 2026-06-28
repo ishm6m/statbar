@@ -18,22 +18,9 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP="${1:-$ROOT/build/StatBar.app}"
 [[ -d "$APP" ]] || { echo "app not found: $APP (run build_release.sh first)" >&2; exit 1; }
 
-# Keep the bundle's Info.plist in sync with the source of truth (carries the
-# real Sparkle public key) before resealing.
+# Keep the bundle's Info.plist in sync with the source of truth before resealing.
 if [[ -f "$ROOT/Info.plist" ]]; then
   cp "$ROOT/Info.plist" "$APP/Contents/Info.plist"
-fi
-
-FW="$APP/Contents/Frameworks/Sparkle.framework/Versions/B"
-if [[ -d "$FW" ]]; then
-  echo "==> re-signing Sparkle.framework (inside-out)"
-  codesign --force -s - "$FW/XPCServices/Downloader.xpc"
-  codesign --force -s - "$FW/XPCServices/Installer.xpc"
-  codesign --force -s - "$FW/Autoupdate"
-  codesign --force -s - "$FW/Updater.app/Contents/MacOS/"* 2>/dev/null || true
-  codesign --force -s - "$FW/Updater.app"
-  codesign --force -s - "$FW/Sparkle"
-  codesign --force -s - "$APP/Contents/Frameworks/Sparkle.framework"
 fi
 
 echo "==> re-signing main binary + app shell"

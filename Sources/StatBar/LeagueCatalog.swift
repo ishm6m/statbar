@@ -35,8 +35,8 @@ enum LeagueCatalog {
     /// entry ships a working feed today, so this is the full list.
     static let supported: [LeagueDefinition] = all
 
-    /// The single league included free; enabling any other is gated (PRD §7.4).
-    static let freeLeagueID = "eng.1"
+    /// Default league pre-selected during onboarding when the user picks none.
+    static let defaultLeagueID = "eng.1"
 
     private static let byIDIndex: [String: LeagueDefinition] = Dictionary(
         uniqueKeysWithValues: all.map { ($0.id, $0) }

@@ -1,7 +1,6 @@
 import Foundation
 
 /// Suppresses duplicate notifications across polling cycles and app restarts
-/// (PRD v1.0 §2).
 ///
 /// The score feed is snapshot-only, so the same event can be re-derived on
 /// consecutive refreshes (and a restart loses the in-memory baseline entirely).

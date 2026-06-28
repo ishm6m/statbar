@@ -1,7 +1,7 @@
 import Foundation
 import Network
 
-/// Observes network reachability (PRD v1.0 §3). Drives the "Offline — displaying
+/// Observes network reachability. Drives the "Offline — displaying
 /// last known data" banner and lets the refresh loop skip doomed requests.
 ///
 /// `NWPathMonitor` reports the path on a background queue; we hop to the main

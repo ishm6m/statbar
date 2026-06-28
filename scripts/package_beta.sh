@@ -7,8 +7,8 @@
 #   2. Name the ZIP from the version: StatBar-v<short>.zip, or
 #      StatBar-v<short>-build<build>.zip when the build number differs.
 #   3. Delete older beta ZIPs (and their .sha256 sidecars).
-#   4. Archive with `ditto -c -k --keepParent` (preserves Sparkle.framework
-#      symlinks/resource forks; plain `zip` corrupts them).
+#   4. Archive with `ditto -c -k --keepParent` (preserves the bundle's symlinks
+#      and resource forks; plain `zip` corrupts them).
 #   5. Write a SHA-256 sidecar (`shasum -c`-compatible).
 #   6. Round-trip verify: extract into a temp dir and confirm a valid StatBar.app
 #      comes back out (codesign --verify --deep --strict).

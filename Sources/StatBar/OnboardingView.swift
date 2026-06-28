@@ -435,7 +435,7 @@ struct OnboardingView: View {
     }
 
     private func persist() {
-        prefs.enabledLeagues = enabledLeagues.isEmpty ? [LeagueCatalog.freeLeagueID] : enabledLeagues
+        prefs.enabledLeagues = enabledLeagues.isEmpty ? [LeagueCatalog.defaultLeagueID] : enabledLeagues
         prefs.followedTeams = followed
         prefs.displayMode = displayMode
     }
@@ -443,11 +443,6 @@ struct OnboardingView: View {
     private func finish(requestNotifications: Bool) {
         persist()
         prefs.onboardingCompleted = true
-        AnalyticsService.onboardingCompleted(
-            sportCount: prefs.enabledLeagues.count,
-            teamCount: followed.count,
-            notificationsEnabled: requestNotifications
-        )
         onComplete(requestNotifications)
     }
 

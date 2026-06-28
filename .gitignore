@@ -21,3 +21,6 @@ DerivedData/
 
 # Internal PRD with stale pre-open-source pricing spec
 /prd.md
+
+# Stray npm lockfile (this is a Swift package; the site is its own repo)
+/package-lock.json

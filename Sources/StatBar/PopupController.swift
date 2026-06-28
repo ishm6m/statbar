@@ -25,8 +25,8 @@ final class PopupController: NSObject, ObservableObject {
     private var panel: NSPanel?
     private var globalMonitor: Any?
     private var localMonitor: Any?
-    /// Kept so the panel can re-fit when async content (scores, standings, the
-    /// lite-mode unlock teaser) lands *after* the popup is already open —
+    /// Kept so the panel can re-fit when async content (scores, standings)
+    /// lands *after* the popup is already open —
     /// otherwise the panel stays at its open-time height and the extra content is
     /// clipped (the "half popup"). The hosting view auto-sizes to its content
     /// (`sizingOptions`); `frameObserver` watches that and re-fits the panel.
@@ -537,8 +537,8 @@ final class PopupController: NSObject, ObservableObject {
         // anchored), so the hosting view never exceeds the panel — the AppKit
         // scroll view below stays a passive container and can't bottom-anchor.
         // Let the hosting view drive its own height from the SwiftUI content, so
-        // it grows/shrinks as async content (scores, standings, the lite-mode
-        // teaser) lands. Width stays pinned to the popup width.
+        // it grows/shrinks as async content (scores, standings) lands. Width
+        // stays pinned to the popup width.
         hosting.sizingOptions = [.intrinsicContentSize]
         hosting.setFrameSize(NSSize(width: popupWidth, height: hosting.fittingSize.height))
         hosting.layoutSubtreeIfNeeded()

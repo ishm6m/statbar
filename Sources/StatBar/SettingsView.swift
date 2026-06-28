@@ -2,15 +2,15 @@ import SwiftUI
 import LaunchAtLogin
 
 /// Backs SettingsView. Every mutation writes through to UserDefaults
-/// immediately via UserPreferencesManager (PRD §3.4 / Session 5).
+/// immediately via UserPreferencesManager.
 @MainActor
 final class SettingsViewModel: ObservableObject {
     private let prefs = UserPreferencesManager.shared
 
-    @Published var displayMode: DisplayMode { didSet { prefs.displayMode = displayMode; AnalyticsService.displayModeChanged(displayMode); notifyChange() } }
+    @Published var displayMode: DisplayMode { didSet { prefs.displayMode = displayMode; notifyChange() } }
     @Published var enabledLeagues: Set<String> { didSet { prefs.enabledLeagues = enabledLeagues; notifyChange() } }
     @Published var followedTeams: [Team] { didSet { prefs.followedTeams = followedTeams; notifyChange() } }
-    @Published var autoFocusEnabled: Bool { didSet { prefs.autoFocusEnabled = autoFocusEnabled; AnalyticsService.autoFocusToggled(autoFocusEnabled); notifyChange() } }
+    @Published var autoFocusEnabled: Bool { didSet { prefs.autoFocusEnabled = autoFocusEnabled; notifyChange() } }
     @Published var notifyMatchStarting: Bool { didSet { prefs.notifyMatchStarting = notifyMatchStarting } }
     @Published var notifyFinalScore: Bool { didSet { prefs.notifyFinalScore = notifyFinalScore } }
     @Published var notifyGoals: Bool { didSet { prefs.notifyGoals = notifyGoals } }
@@ -46,7 +46,6 @@ final class SettingsViewModel: ObservableObject {
         var set = enabledLeagues
         if on { set.insert(league.id) } else { set.remove(league.id) }
         enabledLeagues = set
-        AnalyticsService.sportToggled(league.sport, enabled: on)
     }
 
     var searchResults: [Team] {
@@ -62,7 +61,6 @@ final class SettingsViewModel: ObservableObject {
         followedTeams.append(team)
         teamLimitReached = false
         searchQuery = ""
-        AnalyticsService.favouriteTeamAdded(sport: team.sport)
     }
 
     func removeTeam(_ team: Team) {
@@ -75,7 +73,7 @@ struct SettingsView: View {
     @StateObject var viewModel: SettingsViewModel
     @ObservedObject private var diagnostics = DiagnosticsStore.shared
     @ObservedObject private var logoDiagnostics = LogoDiagnostics.shared
-    /// Hidden Debug Information panel (PRD §6): revealed by tapping the version
+    /// Hidden Debug Information panel: revealed by tapping the version
     /// row five times. Stays collapsed for normal users.
     @State private var versionTapCount = 0
     @State private var showDebugPanel = false
@@ -317,7 +315,7 @@ struct SettingsView: View {
         }
     }
 
-    // MARK: - Debug Information (hidden, PRD §6)
+    // MARK: - Debug Information (hidden)
 
     private func revealDebugPanelIfNeeded() {
         guard !showDebugPanel else { return }
@@ -336,7 +334,6 @@ struct SettingsView: View {
             debugRow("Launch time", diagnostics.launchDurationText)
             debugRow("Last refresh", diagnostics.lastRefreshText)
             debugRow("API latency", diagnostics.latencyText)
-            debugRow("Analytics", diagnostics.analyticsStatus)
             debugRow("Update URL", diagnostics.updateURL)
             debugRow("Last update check", diagnostics.lastUpdateCheckText)
             debugRow("Last update result", diagnostics.lastUpdateResult)

@@ -3,8 +3,7 @@ import Foundation
 
 /// Lightweight, dependency-free update checker.
 ///
-/// The default update mechanism (see `Config.Updates.useSparkle`). It fetches a
-/// small `version.json` manifest from a configurable URL
+/// Fetches a small `version.json` manifest from a configurable URL
 /// (`Config.Updates.versionManifestURL`), compares the latest version against
 /// the installed `CFBundleShortVersionString`, and presents a native `NSAlert`.
 ///

@@ -1,8 +1,8 @@
 import SwiftUI
 import AppKit
 
-/// The menu-bar popup, rebuilt as a dense, scan-first scoreboard (MenuScores-
-/// style) rather than one oversized hero card. Every game is a two-line cell —
+/// The menu-bar popup: a dense, scan-first scoreboard rather than one oversized
+/// hero card. Every game is a two-line cell —
 /// away over home, scores right-aligned and monospaced, state/clock in a fixed
 /// leading column, a 3pt brand-color edge so the eye finds a game by team color.
 /// The Smart-Focus pick (`controller.focusMatch`) sits at the top and is the one
@@ -531,7 +531,7 @@ struct StatsPopupView: View {
 
     // MARK: - States
 
-    /// Shown instead of an error when connectivity drops (PRD §3).
+    /// Shown instead of an error when connectivity drops.
     private var offlineBanner: some View {
         HStack(spacing: Theme.Spacing.md) {
             Image(systemName: "wifi.slash").foregroundStyle(.orange)

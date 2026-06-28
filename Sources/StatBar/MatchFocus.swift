@@ -1,6 +1,6 @@
 import Foundation
 
-/// Smart Focus Mode (roadmap §2).
+/// Smart Focus Mode.
 ///
 /// The score feed is snapshot-only, so "what matters right now" has to be
 /// derived from each match's own state. `MatchFocus` assigns every match a

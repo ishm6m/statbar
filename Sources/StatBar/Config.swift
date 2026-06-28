@@ -1,29 +1,8 @@
 import Foundation
 
-/// Single source of truth for every secret, endpoint, and integration toggle
-/// (PRD v1.0 §5). Nothing else in the codebase hard-codes a URL or token.
-///
-/// Build-variant values: anything that should differ between development and a
-/// shipped build is selected via `#if DEBUG`. Placeholder values (the
-/// `REPLACE_WITH_…` sentinels) leave the corresponding integration disabled —
-/// `isConfigured` checks below return `false`, and each call site no-ops rather
-/// than firing against a bogus endpoint.
+/// Single source of truth for every endpoint and integration toggle. Nothing
+/// else in the codebase hard-codes a URL.
 enum Config {
-
-    // MARK: - PostHog analytics
-
-    enum Analytics {
-        /// Project API key from posthog.com → Project Settings. While left as
-        /// the placeholder the SDK never initializes (see `isConfigured`).
-        static let projectToken = "phc_REPLACE_WITH_POSTHOG_PROJECT_KEY"
-        static let host = "https://us.i.posthog.com"
-
-        /// True once a real `phc_…` token is set. Analytics stay off otherwise,
-        /// so dev builds never phone home.
-        static var isConfigured: Bool {
-            projectToken.hasPrefix("phc_") && !projectToken.contains("REPLACE_WITH")
-        }
-    }
 
     // MARK: - Updates (FreeUpdateChecker)
 
@@ -31,7 +10,6 @@ enum Config {
         /// Endpoint for the lightweight, dependency-free update check (see
         /// `FreeUpdateChecker`). Serves the `version.json` at the repo root via
         /// raw GitHub; the manifest's `downloadURL` points at the latest Release.
-        /// ponytail: assumes the app repo is github.com/ishm6m/statbar — fix if renamed.
         static let versionManifestURL = URL(string: "https://raw.githubusercontent.com/ishm6m/statbar/main/version.json")!
 
         /// Whether to run an update check automatically at app launch. On — the

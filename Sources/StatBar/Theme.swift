@@ -3,7 +3,7 @@ import SwiftUI
 /// Single source of truth for StatBar's look — spacing, corner radii, typography
 /// and the handful of surface treatments every screen shares. Before this, each
 /// view hand-rolled its own padding/fonts/backgrounds, so the popup, onboarding,
-/// settings and paywall drifted apart. Centralizing them keeps the dense
+/// settings drifted apart. Centralizing them keeps the dense
 /// scoreboard, first-run, and settings visually of a piece.
 enum Theme {
     /// 4-pt rhythm. Use these instead of magic numbers so vertical/horizontal
@@ -59,7 +59,7 @@ enum Theme {
 
 extension View {
     /// Standard card: rounded rect fill + hairline border. Used by Settings
-    /// sections, the paywall and onboarding panels so every grouped surface
+    /// sections and onboarding panels so every grouped surface
     /// shares one shape.
     func statCard(padding: CGFloat = Theme.Spacing.lg, selected: Bool = false) -> some View {
         self
@@ -89,7 +89,7 @@ extension View {
     }
 
     /// Prominent Liquid Glass on the primary CTA (macOS 26+), else the standard
-    /// prominent button. One swap point so the purchase/Get-Started buttons match.
+    /// prominent button. One swap point so the primary action buttons match.
     @ViewBuilder
     func glassProminentButton() -> some View {
         if #available(macOS 26.0, *) {

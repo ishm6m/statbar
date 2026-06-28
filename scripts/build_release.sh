@@ -3,8 +3,8 @@
 # StatBar release packager (SwiftPM → signed, notarized .app + .dmg).
 #
 # No Xcode required — assembles the .app bundle by hand from `swift build`
-# output, embeds Sparkle.framework, signs with Hardened Runtime + entitlements,
-# builds a DMG, then notarizes and staples.
+# output, signs with Hardened Runtime + entitlements, builds a DMG, then
+# notarizes and staples.
 #
 # Required environment (export before running):
 #   DEV_ID        "Developer ID Application: Your Name (TEAMID)"
@@ -28,16 +28,8 @@ ENTITLEMENTS="$ROOT/StatBar.entitlements"
 # Assemble the bundle (shared with the local pipeline). Leaves $APP UNSIGNED.
 "$ROOT/scripts/assemble_app.sh"
 
-echo "==> codesign (inside-out, Hardened Runtime)"
+echo "==> codesign (Hardened Runtime)"
 SIGN=(codesign --force --options runtime --timestamp --sign "$DEV_ID")
-# Sign Sparkle's nested helpers first, then the framework.
-if [[ -d "$APP/Contents/Frameworks/Sparkle.framework" ]]; then
-  FW="$APP/Contents/Frameworks/Sparkle.framework"
-  find "$FW" \( -name "*.xpc" -o -name "*.app" \) -print0 | while IFS= read -r -d '' n; do
-    "${SIGN[@]}" "$n"
-  done
-  "${SIGN[@]}" "$FW"
-fi
 # Sign the main executable with entitlements, then the bundle.
 "${SIGN[@]}" --entitlements "$ENTITLEMENTS" "$APP/Contents/MacOS/$APP_NAME"
 "${SIGN[@]}" --entitlements "$ENTITLEMENTS" "$APP"

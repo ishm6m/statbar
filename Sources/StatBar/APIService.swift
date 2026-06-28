@@ -465,7 +465,7 @@ actor APIService {
         return (games, response.season?.year)
     }
 
-    // MARK: - Networking with exponential backoff (PRD §1)
+    // MARK: - Networking with exponential backoff
 
     /// Non-retryable client errors (4xx) — retrying won't help.
     private struct ClientError: Error { let status: Int }

@@ -24,7 +24,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Agent apps (.accessory) ship with no main menu, so the standard Cut/Copy/
     /// Paste/Select-All key equivalents (⌘X/C/V/A) never fire — text fields in the
-    /// Settings/paywall windows can't be pasted into. Install a minimal Edit menu
+    /// Settings windows can't be pasted into. Install a minimal Edit menu
     /// whose items target the responder chain (nil target) so the field editor
     /// handles them wherever the app is key.
     private func installEditMenu() {
@@ -45,7 +45,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.accessory)
         installEditMenu()
 
-        // Critical path first: get the menu bar item on screen ASAP (PRD §7).
+        // Critical path first: get the menu bar item on screen ASAP.
         // Everything non-essential is deferred to the next runloop tick so the
         // icon appears within ~1s rather than blocking on SDK setup + network.
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -94,9 +94,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if Config.Updates.checkOnLaunch {
             FreeUpdateChecker.shared.checkForUpdatesInBackground()
         }
-
-        // Analytics is currently disabled (no provider wired) — no-op.
-        AnalyticsService.bootstrap()
 
         // Notifications: register the delegate/category. Permission is requested
         // at the end of first-run onboarding; returning users are asked here.

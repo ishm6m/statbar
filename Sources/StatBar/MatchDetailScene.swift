@@ -34,7 +34,7 @@ struct MatchDetailScene: View {
     }
 
     /// Tabs that actually have content, in fixed order. Empty tabs are hidden so
-    /// there is never a dead control (PRD §7).
+    /// there is never a dead control.
     private var availableTabs: [DetailTab] {
         guard let d = detail else { return [] }
         var tabs: [DetailTab] = []

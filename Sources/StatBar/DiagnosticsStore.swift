@@ -3,11 +3,11 @@ import AppKit
 import UserNotifications
 
 /// Collects runtime diagnostics for the hidden Debug Information panel
-/// (PRD v1.0 §6) and feeds startup-time logging (§7).
+/// and feeds startup-time logging.
 ///
 /// Single main-actor store; the refresh loop records the last successful
 /// refresh and its latency here, and the Settings panel reads the snapshot.
-/// Formatters are created once and reused (§8) — never per render.
+/// Formatters are created once and reused — never per render.
 @MainActor
 final class DiagnosticsStore: ObservableObject {
     static let shared = DiagnosticsStore()
@@ -75,10 +75,6 @@ final class DiagnosticsStore: ObservableObject {
     var macOSVersion: String {
         let v = ProcessInfo.processInfo.operatingSystemVersion
         return "\(v.majorVersion).\(v.minorVersion).\(v.patchVersion)"
-    }
-
-    var analyticsStatus: String {
-        Config.Analytics.isConfigured ? "Enabled" : "Disabled (no key)"
     }
 
     /// The endpoint the update checker reads.

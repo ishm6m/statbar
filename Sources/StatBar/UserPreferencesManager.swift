@@ -217,7 +217,7 @@ final class UserPreferencesManager {
         set { defaults.set(newValue, forKey: notifyMatchStartingKey) }
     }
 
-    /// Final score notifications default ON per PRD §3.5.
+    /// Final score notifications default ON.
     var notifyFinalScore: Bool {
         get { defaults.object(forKey: notifyFinalScoreKey) as? Bool ?? true }
         set { defaults.set(newValue, forKey: notifyFinalScoreKey) }

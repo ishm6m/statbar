@@ -1,7 +1,7 @@
 import Foundation
 import UserNotifications
 
-/// macOS notifications for live match events (PRD §8 / Session 8).
+/// macOS notifications for live match events.
 ///
 /// The score feed is snapshot-only — there are no event objects — so this
 /// service diffs each refresh against the previous snapshot to derive events:
@@ -80,7 +80,7 @@ final class NotificationService: NSObject {
             // Only leagues the user enabled.
             guard enabled.contains(match.league) else { continue }
             // Followed-team filter: if teams set, match must involve one;
-            // if no teams set, all enabled leagues pass (PRD §8.4).
+            // if no teams set, all enabled leagues pass.
             if !teams.isEmpty, !matchInvolvesFollowedTeam(match, teams: teams) { continue }
 
             // No previous snapshot for this match → baseline, skip.
@@ -142,7 +142,6 @@ final class NotificationService: NSObject {
     private func postMatchStarting(_ match: Match) {
         let id = NotificationDeduplicator.eventID(matchID: match.matchID, type: "match_starting")
         guard dedup.shouldSend(id) else { return }
-        AnalyticsService.notificationSent(type: "match_starting", sport: match.sport)
         post(
             title: "\(match.sport.emoji) \(match.sport.displayName) Starting Soon",
             body: "\(match.homeTeam) vs \(match.awayTeam) is kicking off",
@@ -157,7 +156,6 @@ final class NotificationService: NSObject {
             matchID: match.matchID, type: "score",
             state: "\(match.homeScore)-\(match.awayScore)")
         guard dedup.shouldSend(id) else { return }
-        AnalyticsService.notificationSent(type: "score", sport: match.sport)
         let clock = match.gameClock.isEmpty ? "" : " (\(match.gameClock))"
         post(
             title: "\(match.sport.emoji) \(scoreWord(for: match.sport))",
@@ -171,7 +169,6 @@ final class NotificationService: NSObject {
             matchID: match.matchID, type: "final_score",
             state: "\(match.homeScore)-\(match.awayScore)")
         guard dedup.shouldSend(id) else { return }
-        AnalyticsService.notificationSent(type: "final_score", sport: match.sport)
         post(
             title: "\(match.sport.emoji) Final",
             body: "\(match.homeTeam) \(match.homeScore), \(match.awayTeam) \(match.awayScore)",
@@ -182,7 +179,6 @@ final class NotificationService: NSObject {
     private func postOvertime(_ match: Match) {
         let id = NotificationDeduplicator.eventID(matchID: match.matchID, type: "overtime")
         guard dedup.shouldSend(id) else { return }
-        AnalyticsService.notificationSent(type: "overtime", sport: match.sport)
         post(
             title: "\(match.sport.emoji) Overtime!",
             body: "\(match.homeTeam) \(match.homeScore)-\(match.awayScore) \(match.awayTeam) is heading to OT",
@@ -197,7 +193,6 @@ final class NotificationService: NSObject {
             matchID: match.matchID, type: "lead_change",
             state: "\(match.homeScore)-\(match.awayScore)")
         guard dedup.shouldSend(id) else { return }
-        AnalyticsService.notificationSent(type: "lead_change", sport: match.sport)
         post(
             title: "\(match.sport.emoji) Lead Change",
             body: "\(leader) now lead \(match.homeTeam) \(match.homeScore)-\(match.awayScore) \(match.awayTeam)",
@@ -219,7 +214,7 @@ final class NotificationService: NSObject {
         content.sound = .default
         content.categoryIdentifier = categoryID
         // .timeSensitive only for final scores so in-game updates respect Focus
-        // modes (PRD §8.5).
+        // modes.
         content.interruptionLevel = timeSensitive ? .timeSensitive : .active
 
         let request = UNNotificationRequest(

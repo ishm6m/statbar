@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 /// Hosts SettingsView in a standalone NSWindow, separate from the menu bar
-/// popover (PRD Session 5: "Open SettingsView in a separate NSWindow").
+/// popover.
 @MainActor
 final class SettingsWindowController {
     private var window: NSWindow?
