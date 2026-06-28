@@ -1,0 +1,23 @@
+.DS_Store
+/.build
+/build
+/Packages
+
+# build / distribution artifacts — released via GitHub Releases, not committed
+/StatBar.app.zip
+/swiftly.pkg
+*.pkg
+xcuserdata/
+DerivedData/
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+
+# Marketing site is its own repo (github.com/ishm6m/statbar-site)
+/site
+
+# Icon source master (13MB) — generated icons are committed; ask maintainer for this
+/statbar-logo.png
+
+# Internal PRD with stale pre-open-source pricing spec
+/prd.md

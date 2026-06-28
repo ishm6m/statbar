@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:statbar}",
+            "name": "Debug StatBar",
+            "target": "StatBar",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug StatBar"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:statbar}",
+            "name": "Release StatBar",
+            "target": "StatBar",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release StatBar"
+        }
+    ]
+}

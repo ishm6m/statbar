@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Outbound network for the score/license APIs. -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <!-- Sparkle (no App Sandbox) needs no extra entitlements here; if you ever
+         enable the sandbox, Sparkle requires additional XPC + temporary-
+         exception entitlements — not set, since this is a Developer-ID build. -->
+</dict>
+</plist>
