@@ -1,11 +1,28 @@
+<div align="center">
+
+<img src="docs/images/icon.png" width="128" alt="StatBar icon">
+
 # StatBar
 
-Live sports scores in your macOS menu bar. Free and open source.
+**Live football scores in your macOS menu bar. Free and open source.**
 
-StatBar is a lightweight menu-bar agent that puts live scores from the NFL, NBA,
-NHL, MLB and the world's top soccer leagues a glance away — no window to switch
-to, no browser tab. Tap a game for the full story; for soccer that's a complete
-timeline of goals, cards, and substitutions.
+[![Download](https://img.shields.io/github/v/release/ishm6m/statbar?label=Download&style=for-the-badge)](https://github.com/ishm6m/statbar/releases/latest)
+
+[![macOS 13+](https://img.shields.io/badge/macOS-13%2B-black?logo=apple)](https://github.com/ishm6m/statbar/releases/latest)
+[![Swift 6](https://img.shields.io/badge/Swift-6-orange?logo=swift)](https://swift.org)
+[![License: MIT](https://img.shields.io/github/license/ishm6m/statbar)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/ishm6m/statbar?style=flat)](https://github.com/ishm6m/statbar/stargazers)
+
+<!-- TODO: capture over a clean desktop, then uncomment (see scripts/capture_popup.sh)
+<img src="docs/images/hero.png" width="720" alt="StatBar showing live football scores in the macOS menu bar">
+-->
+
+</div>
+
+StatBar is a lightweight menu-bar agent that puts live scores from the world's
+top football leagues and competitions a glance away — no window to switch to, no
+browser tab. Tap a match for the full story: a complete timeline of goals,
+cards, and substitutions.
 
 ## Features
 
@@ -19,8 +36,23 @@ timeline of goals, cards, and substitutions.
   not. Native, lightweight, battery-friendly.
 - **Notifications** — match starting, goals, and final scores.
 
-Eleven leagues: NFL, NBA, NHL, MLB, Premier League, La Liga, Serie A,
-Bundesliga, Ligue 1, MLS, Champions League.
+<!-- TODO: capture over a clean desktop, then uncomment
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/popup.png" alt="StatBar popup listing live matches"></td>
+    <td width="50%"><img src="docs/images/soccer-detail.png" alt="Football match timeline with goals, cards, and subs"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Every match, one glance</b></td>
+    <td align="center"><b>Full match timeline</b></td>
+  </tr>
+</table>
+-->
+
+**Leagues:** Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, EFL
+Championship, Primeira Liga, Eredivisie, Liga MX, Brasileirão, NWSL.
+**Cups:** Champions League, Europa League, Conference League, FIFA World Cup,
+FIFA Women's World Cup.
 
 Data comes from ESPN's public endpoints. Not affiliated with any league or
 broadcaster.
