@@ -13,9 +13,7 @@
 [![License: MIT](https://img.shields.io/github/license/ishm6m/statbar)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/ishm6m/statbar?style=flat)](https://github.com/ishm6m/statbar/stargazers)
 
-<!-- TODO: capture over a clean desktop, then uncomment (see scripts/capture_popup.sh)
 <img src="docs/images/hero.png" width="720" alt="StatBar showing live football scores in the macOS menu bar">
--->
 
 </div>
 
@@ -36,7 +34,6 @@ cards, and substitutions.
   not. Native, lightweight, battery-friendly.
 - **Notifications** — match starting, goals, and final scores.
 
-<!-- TODO: capture over a clean desktop, then uncomment
 <table>
   <tr>
     <td width="50%"><img src="docs/images/popup.png" alt="StatBar popup listing live matches"></td>
@@ -47,7 +44,6 @@ cards, and substitutions.
     <td align="center"><b>Full match timeline</b></td>
   </tr>
 </table>
--->
 
 **Leagues:** Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, EFL
 Championship, Primeira Liga, Eredivisie, Liga MX, Brasileirão, NWSL.
