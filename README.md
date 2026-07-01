@@ -15,6 +15,11 @@
 
 <img src="docs/images/hero.png" width="720" alt="StatBar showing live football scores in the macOS menu bar">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/leagues-bar-dark.png">
+  <img src="docs/images/leagues-bar-light.png" width="720" alt="Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, EFL Championship, Primeira Liga, Eredivisie, Liga MX, Brasileirão, NWSL, Champions League, Europa League, Conference League, and FIFA World Cup logos">
+</picture>
+
 </div>
 
 StatBar is a lightweight menu-bar agent that puts live scores from the world's
