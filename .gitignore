@@ -24,3 +24,12 @@ DerivedData/
 
 # Stray npm lockfile (this is a Swift package; the site is its own repo)
 /package-lock.json
+
+# Raw screenshot dumps — README assets live in docs/images/
+/Screenshot/
+
+# Local agent config (may reference local credentials) — never track
+.claude/settings.local.json
+
+# Internal working notes — not for the public repo
+/CLAUDE.md
