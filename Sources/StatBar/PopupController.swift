@@ -1,6 +1,5 @@
 import AppKit
 import SwiftUI
-import LaunchAtLogin
 
 /// Top-anchors an NSScrollView. AppKit views are bottom-left origin, so a plain
 /// clip view makes NSScrollView show the *bottom* of overflowing content first

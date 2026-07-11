@@ -1,5 +1,4 @@
 import SwiftUI
-import LaunchAtLogin
 
 /// Backs SettingsView. Every mutation writes through to UserDefaults
 /// immediately via UserPreferencesManager.

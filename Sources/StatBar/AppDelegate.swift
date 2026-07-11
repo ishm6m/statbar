@@ -1,7 +1,6 @@
 import AppKit
 import CoreText
 import Foundation
-import LaunchAtLogin
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
