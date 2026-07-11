@@ -6,7 +6,9 @@ Source of truth:  statbar-logo.png  (repo root — NEVER modified by this script
 Outputs:
   Resources/Assets.xcassets/AppIcon.appiconset/*.png   macOS .appiconset (1x/2x)
   Resources/AppIcon.icns                                bundled app icon (via iconutil)
-  web/*.png, web/favicon.ico                            website / favicon assets
+  site/public/*.png, site/public/site.webmanifest      website / favicon assets
+  site/app/favicon.ico                                  served by Next at /favicon.ico
+  site/app/og-icon.png                                  source bitmap for the OG/Twitter card
 
 The artwork is preserved exactly: no recolor, no crop, no stylize. The source is
 slightly non-square, so it is centered on a transparent square canvas (padding
@@ -28,7 +30,8 @@ SRC = ROOT / "statbar-logo.png"
 
 APPICONSET = ROOT / "Resources" / "Assets.xcassets" / "AppIcon.appiconset"
 ICNS = ROOT / "Resources" / "AppIcon.icns"
-WEB = ROOT / "web"
+WEB = ROOT / "site" / "public"
+FAVICON_ICO = ROOT / "site" / "app" / "favicon.ico"
 
 # macOS .appiconset entries: (base point size, scale) -> pixel size.
 APPICON_VARIANTS = [
@@ -43,11 +46,13 @@ APPICON_VARIANTS = [
 WEB_PNGS = {
     "favicon-16x16.png": 16,
     "favicon-32x32.png": 32,
-    "apple-touch-icon-180x180.png": 180,
-    "icon-192x192.png": 192,
-    "icon-512x512.png": 512,
+    "apple-touch-icon.png": 180,
+    "android-chrome-192x192.png": 192,
+    "android-chrome-512x512.png": 512,
 }
 FAVICON_ICO_SIZES = [16, 32, 48]
+# Social-card source, kept out of public/ so browser and social assets stay separate.
+OG_ICON = ROOT / "site" / "app" / "og-icon.png"
 
 
 def load_square_master() -> Image.Image:
@@ -107,10 +112,10 @@ def build_icns(master: Image.Image) -> None:
 def build_web(master: Image.Image) -> None:
     for name, px in WEB_PNGS.items():
         write(resized(master, px), WEB / name)
-    ico = WEB / "favicon.ico"
     base = resized(master, max(FAVICON_ICO_SIZES))
-    base.save(ico, sizes=[(s, s) for s in FAVICON_ICO_SIZES])
-    print(f"  wrote {ico.relative_to(ROOT)} ({'/'.join(map(str, FAVICON_ICO_SIZES))})")
+    base.save(FAVICON_ICO, sizes=[(s, s) for s in FAVICON_ICO_SIZES])
+    print(f"  wrote {FAVICON_ICO.relative_to(ROOT)} ({'/'.join(map(str, FAVICON_ICO_SIZES))})")
+    write(resized(master, 512), OG_ICON)
 
 
 def main() -> int:
