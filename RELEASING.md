@@ -14,14 +14,19 @@ The two things a release touches:
 
 ## 1. Bump the version
 
-Edit `Info.plist`:
+```sh
+scripts/set_version.sh 1.2 "• Fixed NHL scores\n• Faster launch"
+```
 
-- `CFBundleShortVersionString`: the user-facing version (e.g. `1.2`). This is
-  what `FreeUpdateChecker` compares against the manifest.
-- `CFBundleVersion`: the monotonic build number (e.g. `3`).
+One command stamps everything that must agree:
 
-Keep `CFBundleShortVersionString` equal to the `version` you put in
-`version.json`, otherwise a shipped build prompts users to "update" to itself.
+- `Info.plist` `CFBundleShortVersionString` (the user-facing version
+  `FreeUpdateChecker` compares against the manifest) and `CFBundleVersion`
+  (monotonic build number, auto-incremented).
+- `version.json` `version` + `publishedAt`, and `releaseNotes` when passed.
+
+If the plist and manifest versions ever differ, a shipped build prompts users
+to "update" to itself — that is why the script is the only supported way to bump.
 
 ## 2. Build + re-sign + verify + zip
 
@@ -43,10 +48,12 @@ make beta
 
 Output ends with the absolute zip path, size, and SHA-256.
 
-## 3. Update `version.json`
+## 3. Review `version.json`
 
-Edit the manifest at the repo root (served to the app via
-`Config.Updates.versionManifestURL`, i.e. raw GitHub on `main`):
+Step 1 already stamped `version`, `publishedAt`, and `releaseNotes`. Review the
+manifest at the repo root (served to the app via
+`Config.Updates.versionManifestURL`, i.e. raw GitHub on `main`) and adjust the
+optional fields if needed:
 
 ```json
 {
