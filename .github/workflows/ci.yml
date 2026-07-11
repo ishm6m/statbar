@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # The package needs swift-tools 6.3; pick the newest Xcode on the image.
       - name: Select newest Xcode
