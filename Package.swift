@@ -16,7 +16,8 @@ let package = Package(
         .testTarget(
             name: "StatBarTests",
             dependencies: ["StatBar"],
-            path: "Tests/StatBarTests"
+            path: "Tests/StatBarTests",
+            resources: [.copy("Fixtures")]
         ),
     ],
     swiftLanguageModes: [.v6]
