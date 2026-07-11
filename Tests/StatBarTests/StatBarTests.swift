@@ -25,9 +25,9 @@ final class StatBarTests: XCTestCase {
         func m(_ home: String, _ away: String, _ hs: Int, _ as_: Int, status: String) -> Match {
             Match(sport: .soccer, league: "eng.1", homeTeam: home, awayTeam: away,
                   homeScore: hs, awayScore: as_, status: status, gameClock: "62'",
-                  detail: "", downDistance: "", possession: "", fgPct: "",
-                  leadingScorer: "", leadingPoints: "", topThree: [], currentLap: "",
-                  gapToLeader: "", homeLogo: nil, awayLogo: nil)
+                  detail: "", homeLogo: nil, awayLogo: nil, kickoff: nil, gameURL: nil,
+                  homeColor: nil, awayColor: nil, espnEventID: nil, homeTeamID: nil,
+                  awayTeamID: nil, stage: nil)
         }
         // Live games win and carry the clock.
         let live = GetScoresIntent.summary([m("ARS", "CHE", 2, 1, status: "live")])
@@ -49,9 +49,9 @@ final class StatBarTests: XCTestCase {
                        kickoff: Date? = nil, league: String = "esp.1") -> Match {
         Match(sport: .soccer, league: league, homeTeam: home, awayTeam: away,
               homeScore: 0, awayScore: 0, status: status, gameClock: "", detail: "",
-              downDistance: "", possession: "", fgPct: "", leadingScorer: "",
-              leadingPoints: "", topThree: [], currentLap: "", gapToLeader: "",
-              homeLogo: nil, awayLogo: nil, kickoff: kickoff)
+              homeLogo: nil, awayLogo: nil, kickoff: kickoff, gameURL: nil,
+              homeColor: nil, awayColor: nil, espnEventID: nil, homeTeamID: nil,
+              awayTeamID: nil, stage: nil)
     }
 
     func testCompanion() {

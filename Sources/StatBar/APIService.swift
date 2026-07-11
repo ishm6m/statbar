@@ -2,9 +2,8 @@ import Foundation
 
 struct Match: Codable, Equatable {
     let sport: Sport
-    /// League id (e.g. "nfl", "eng.1") — the polling unit and `LeagueCatalog`
-    /// key. `sport` stays the category. Decoded with a fallback so `Match` JSON
-    /// cached before leagues existed still loads (see `init(from:)`).
+    /// League id (e.g. "eng.1") — the polling unit and `LeagueCatalog` key.
+    /// `sport` stays the category.
     let league: String
     let homeTeam: String
     let awayTeam: String
@@ -13,130 +12,31 @@ struct Match: Codable, Equatable {
     let status: String
     let gameClock: String
     let detail: String
-    let downDistance: String
-    let possession: String
-    let fgPct: String
-    let leadingScorer: String
-    let leadingPoints: String
-    let topThree: [String]
-    let currentLap: String
-    let gapToLeader: String
-    /// Official team logo URL from the API response, when present. Optional so
-    /// previously-cached `Match` JSON (which lacks it) still decodes; nil falls
+    /// Official team logo URL from the API response, when present; nil falls
     /// back to the guessed CDN path in `LogoProvider`.
     let homeLogo: String?
     let awayLogo: String?
-    /// Scheduled kickoff, parsed from the feed's ISO date. Optional so older
-    /// cached `Match` JSON still decodes; drives the local start-time shown for
-    /// pre-game rows instead of a raw feed clock string.
+    /// Scheduled kickoff, parsed from the feed's ISO date; drives the local
+    /// start-time shown for pre-game rows instead of a raw feed clock string.
     let kickoff: Date?
     /// ESPN web link to the game's box score / gamecast, from the feed's
-    /// `event.links`. Optional so older cached `Match` JSON still decodes; nil
-    /// hides the "View on ESPN" action.
+    /// `event.links`; nil hides the "View on ESPN" action.
     let gameURL: String?
-    /// Pre-formatted per-sport live situation line (e.g. "3rd & 7  ·  BUF ball"
-    /// for football, "2-1  ·  1 Out  ·  On 1st & 3rd" for baseball), built at
-    /// decode time from the feed's `situation`. Optional so older cached `Match`
-    /// JSON still decodes, and nil whenever the game isn't live or the feed
-    /// carries no situation — the hero context row then falls back to `detail`.
-    let liveSituation: String?
     /// Primary team brand colors as ESPN hex strings (e.g. "0b162a"), used for a
-    /// subtle accent under each hero team. Optional so older cached `Match` JSON
-    /// still decodes; nil renders no accent (neutral fallback).
+    /// subtle accent under each hero team; nil renders no accent.
     let homeColor: String?
     let awayColor: String?
     /// ESPN's numeric event id (e.g. "704319"), used to address the per-event
-    /// `summary` endpoint for the detail timeline. Optional so older cached
-    /// `Match` JSON still decodes; nil hides the detail drill-down for that game.
+    /// `summary` endpoint; nil hides the detail drill-down for that game.
     let espnEventID: String?
     /// ESPN numeric team ids (e.g. "359"), used to address each team's schedule
-    /// endpoint for the team page. Optional so older cached `Match` JSON still
-    /// decodes; nil hides the team-page drill-down for that side.
+    /// endpoint; nil hides the team-page drill-down for that side.
     let homeTeamID: String?
     let awayTeamID: String?
     /// Human competition stage for this match (e.g. "Group Stage", "Round of 16",
     /// "Quarterfinal · 1st Leg"). Derived from ESPN's per-event `season.slug` plus
-    /// any leg/round `notes`. Optional so older cached `Match` JSON still decodes;
-    /// nil for plain domestic-league fixtures (regular season carries no stage).
+    /// any leg/round `notes`; nil for plain domestic-league fixtures.
     let stage: String?
-
-    /// Back-compatible decode: `Match` JSON cached before the `league` field
-    /// existed has no key for it — fall back to the sport's raw value so old
-    /// NFL/NBA cache (whose league id equals the sport raw value) still loads.
-    init(from decoder: Decoder) throws {
-        let c = try decoder.container(keyedBy: CodingKeys.self)
-        sport = try c.decode(Sport.self, forKey: .sport)
-        league = try c.decodeIfPresent(String.self, forKey: .league) ?? sport.rawValue
-        homeTeam = try c.decode(String.self, forKey: .homeTeam)
-        awayTeam = try c.decode(String.self, forKey: .awayTeam)
-        homeScore = try c.decode(Int.self, forKey: .homeScore)
-        awayScore = try c.decode(Int.self, forKey: .awayScore)
-        status = try c.decode(String.self, forKey: .status)
-        gameClock = try c.decode(String.self, forKey: .gameClock)
-        detail = try c.decode(String.self, forKey: .detail)
-        downDistance = try c.decode(String.self, forKey: .downDistance)
-        possession = try c.decode(String.self, forKey: .possession)
-        fgPct = try c.decode(String.self, forKey: .fgPct)
-        leadingScorer = try c.decode(String.self, forKey: .leadingScorer)
-        leadingPoints = try c.decode(String.self, forKey: .leadingPoints)
-        topThree = try c.decode([String].self, forKey: .topThree)
-        currentLap = try c.decode(String.self, forKey: .currentLap)
-        gapToLeader = try c.decode(String.self, forKey: .gapToLeader)
-        homeLogo = try c.decodeIfPresent(String.self, forKey: .homeLogo)
-        awayLogo = try c.decodeIfPresent(String.self, forKey: .awayLogo)
-        kickoff = try c.decodeIfPresent(Date.self, forKey: .kickoff)
-        gameURL = try c.decodeIfPresent(String.self, forKey: .gameURL)
-        liveSituation = try c.decodeIfPresent(String.self, forKey: .liveSituation)
-        homeColor = try c.decodeIfPresent(String.self, forKey: .homeColor)
-        awayColor = try c.decodeIfPresent(String.self, forKey: .awayColor)
-        espnEventID = try c.decodeIfPresent(String.self, forKey: .espnEventID)
-        homeTeamID = try c.decodeIfPresent(String.self, forKey: .homeTeamID)
-        awayTeamID = try c.decodeIfPresent(String.self, forKey: .awayTeamID)
-        stage = try c.decodeIfPresent(String.self, forKey: .stage)
-    }
-
-    /// Designated memberwise initializer (the custom `init(from:)` suppresses
-    /// the synthesized one).
-    init(
-        sport: Sport, league: String, homeTeam: String, awayTeam: String,
-        homeScore: Int, awayScore: Int, status: String, gameClock: String,
-        detail: String, downDistance: String, possession: String, fgPct: String,
-        leadingScorer: String, leadingPoints: String, topThree: [String],
-        currentLap: String, gapToLeader: String, homeLogo: String?, awayLogo: String?,
-        kickoff: Date? = nil, gameURL: String? = nil, liveSituation: String? = nil,
-        homeColor: String? = nil, awayColor: String? = nil, espnEventID: String? = nil,
-        homeTeamID: String? = nil, awayTeamID: String? = nil,
-        stage: String? = nil
-    ) {
-        self.sport = sport
-        self.league = league
-        self.homeTeam = homeTeam
-        self.awayTeam = awayTeam
-        self.homeScore = homeScore
-        self.awayScore = awayScore
-        self.status = status
-        self.gameClock = gameClock
-        self.detail = detail
-        self.downDistance = downDistance
-        self.possession = possession
-        self.fgPct = fgPct
-        self.leadingScorer = leadingScorer
-        self.leadingPoints = leadingPoints
-        self.topThree = topThree
-        self.currentLap = currentLap
-        self.gapToLeader = gapToLeader
-        self.homeLogo = homeLogo
-        self.awayLogo = awayLogo
-        self.kickoff = kickoff
-        self.gameURL = gameURL
-        self.liveSituation = liveSituation
-        self.homeColor = homeColor
-        self.awayColor = awayColor
-        self.espnEventID = espnEventID
-        self.homeTeamID = homeTeamID
-        self.awayTeamID = awayTeamID
-        self.stage = stage
-    }
 
     /// Stable identifier for analytics. The feed has no match id, so derive one
     /// from the league + both teams (lowercased, hyphenated). League-scoped so
@@ -250,7 +150,9 @@ actor APIService {
     }
 
     private func cacheKey(for leagueID: String) -> String {
-        "StatBarCachedMatches_\(leagueID.uppercased())"
+        // v2: `Match` dropped its multi-sport fields and custom decode; older
+        // cached blobs are simply abandoned and repopulated on the next fetch.
+        "StatBarCachedMatches_v2_\(leagueID.uppercased())"
     }
 
     private func fetchESPNMatches(for league: LeagueDefinition) async -> [Match] {
@@ -520,17 +422,8 @@ actor APIService {
         isoWithSeconds.date(from: raw) ?? isoNoSeconds.date(from: raw)
     }
 
-    /// Ordinal for a down number: 1 → "1st", 2 → "2nd", 3 → "3rd", 4 → "4th".
-    nonisolated static func ordinal(_ n: Int) -> String {
-        switch n {
-        case 1: return "1st"
-        case 2: return "2nd"
-        case 3: return "3rd"
-        default: return "\(n)th"
-        }
-    }
 
-    private func decodeESPNMatches(from data: Data, league: LeagueDefinition) throws -> [Match] {
+    nonisolated func decodeESPNMatches(from data: Data, league: LeagueDefinition) throws -> [Match] {
         struct ESPNResponse: Decodable {
             let events: [ESPNEvent]
         }
@@ -573,21 +466,7 @@ actor APIService {
         struct ESPNCompetition: Decodable {
             let competitors: [ESPNCompetitor]
             let status: ESPNStatus?
-            let situation: ESPNGameSituation?
-            let leaders: [ESPNLeader]?
             let notes: [ESPNNote]?
-        }
-
-        struct ESPNGameSituation: Decodable {
-            let down: Int?
-            let distance: Int?
-            let possession: String?   // a team *id*, not abbreviation
-        }
-
-        struct ESPNLeader: Decodable {
-            let name: String?
-            let displayValue: String?
-            let team: ESPNTeam?
         }
 
         struct ESPNCompetitor: Decodable {
@@ -622,26 +501,6 @@ actor APIService {
             default: normalizedStatus = statusState
             }
 
-            // ESPN's `situation.possession` is a numeric team *id*, not an
-            // abbreviation — map it back to the home/away side so the hero shows
-            // "BUF ball" rather than a meaningless id.
-            let possessionAbbr: String? = competition.situation?.possession.flatMap { posID in
-                if posID == home.team.id { return home.team.abbreviation }
-                if posID == away.team.id { return away.team.abbreviation }
-                return nil
-            }
-
-            let downDistance = competition.situation.flatMap { s -> String? in
-                guard let down = s.down, let distance = s.distance else { return nil }
-                return "\(Self.ordinal(down)) & \(distance)"
-            } ?? ""
-            let possession = possessionAbbr ?? ""
-
-            // Soccer scoreboard exposes no down/possession/inning situation, so
-            // the hero falls back to `detail` (e.g. "1st Half", "HT") for live
-            // context. Kept nil here; richer live state comes from match detail.
-            let liveSituation: String? = nil
-
             // Between periods ESPN keeps state "in" but zeroes displayClock
             // ("0:00"); show the period text ("End of 1st") instead of a stalled
             // clock so a live game never reads "Live · 0:00".
@@ -657,10 +516,6 @@ actor APIService {
             let gameURL = linkMatching(["desktop", "event"])
                 ?? linkMatching(["summary"])
                 ?? event.links?.first?.href
-
-            let leadingScorer = competition.leaders?.first?.name ?? ""
-            let leadingPoints = competition.leaders?.first?.displayValue ?? ""
-            let fgPct = ""
 
             // Stage label: title-case the per-event season slug, hiding plain
             // regular-season; append any leg/round note (e.g. "1st Leg") so
@@ -680,19 +535,10 @@ actor APIService {
                 status: normalizedStatus,
                 gameClock: gameClock,
                 detail: event.status.type.shortDetail ?? "",
-                downDistance: downDistance,
-                possession: possession,
-                fgPct: fgPct,
-                leadingScorer: leadingScorer,
-                leadingPoints: leadingPoints,
-                topThree: [],
-                currentLap: "",
-                gapToLeader: "",
                 homeLogo: home.team.logo,
                 awayLogo: away.team.logo,
                 kickoff: event.date.flatMap(Self.parseISODate),
                 gameURL: gameURL,
-                liveSituation: liveSituation,
                 homeColor: home.team.color,
                 awayColor: away.team.color,
                 espnEventID: event.id,
@@ -709,7 +555,14 @@ actor APIService {
     /// title-casing the slug ("round-of-16" → "Round of 16"), so a stage we don't
     /// explicitly know still renders sensibly across all 17 competitions.
     nonisolated static func stageLabel(slug: String?, note: String?) -> String? {
-        let slug = slug?.lowercased()
+        var slug = slug?.lowercased()
+        // Domestic feeds put the season *name* in the per-event slug
+        // ("2026-brasileiro-serie-a", "2025-26-english-premier-league"). A year
+        // in the slug means season-name noise, not a stage — knockout slugs
+        // never carry one — so treat it like regular season.
+        if slug?.range(of: #"(19|20)\d{2}"#, options: .regularExpression) != nil {
+            slug = nil
+        }
         let base: String?
         switch slug {
         case nil, "", "regular-season", "regular season": base = nil
@@ -896,7 +749,7 @@ actor APIService {
     /// Decodes an ESPN per-event soccer `summary` into a `MatchDetail`: key
     /// events, minute commentary, side-by-side team stats, lineups, and match
     /// facts — all from the one response.
-    private func decodeMatchDetail(from data: Data, matchID: String) -> MatchDetail {
+    nonisolated func decodeMatchDetail(from data: Data, matchID: String) -> MatchDetail {
         guard let response = try? JSONDecoder().decode(SummaryResponse.self, from: data) else {
             return MatchDetail(matchID: matchID)
         }
@@ -1083,20 +936,25 @@ actor APIService {
     }()
     private static func shortDate(_ date: Date) -> String { shortDateFormatter.string(from: date) }
 
-    /// Pairs each boxscore statistic with its home/away values. Home/away are
-    /// resolved via the header's competitor → team-id map; if the header is
-    /// absent the two boxscore teams are assumed to be [home, away].
-    private static func teamStats(from response: SummaryResponse) -> [TeamStat] {
-        guard let teams = response.boxscore?.teams, teams.count == 2 else { return [] }
-
+    /// Resolves the two boxscore teams into (home, away) via the header's
+    /// competitor → team-id map; if the header is absent the feed order
+    /// [home, away] is assumed.
+    private static func homeAwayTeams(
+        from response: SummaryResponse
+    ) -> (home: SummaryBoxTeam, away: SummaryBoxTeam)? {
+        guard let teams = response.boxscore?.teams, teams.count == 2 else { return nil }
         var sideByID: [String: String] = [:]
         for c in response.header?.competitions?.first?.competitors ?? [] {
             if let id = c.team?.id, let ha = c.homeAway { sideByID[id] = ha }
         }
         func side(_ t: SummaryBoxTeam) -> String? { t.team?.id.flatMap { sideByID[$0] } }
+        return (teams.first { side($0) == "home" } ?? teams[0],
+                teams.first { side($0) == "away" } ?? teams[1])
+    }
 
-        let home = teams.first { side($0) == "home" } ?? teams[0]
-        let away = teams.first { side($0) == "away" } ?? teams[1]
+    /// Pairs each boxscore statistic with its home/away values.
+    private static func teamStats(from response: SummaryResponse) -> [TeamStat] {
+        guard let (home, away) = homeAwayTeams(from: response) else { return [] }
 
         func label(_ s: SummaryStat) -> String? {
             let l = s.label ?? s.name
@@ -1128,15 +986,7 @@ actor APIService {
     /// The team shot funnel — Shots, On Target, Blocked — as home/away
     /// comparison rows, pulled by stat name from the boxscore.
     private static func shotTeamStats(from response: SummaryResponse) -> [TeamStat] {
-        guard let teams = response.boxscore?.teams, teams.count == 2 else { return [] }
-
-        var sideByID: [String: String] = [:]
-        for c in response.header?.competitions?.first?.competitors ?? [] {
-            if let id = c.team?.id, let ha = c.homeAway { sideByID[id] = ha }
-        }
-        func side(_ t: SummaryBoxTeam) -> String? { t.team?.id.flatMap { sideByID[$0] } }
-        let home = teams.first { side($0) == "home" } ?? teams[0]
-        let away = teams.first { side($0) == "away" } ?? teams[1]
+        guard let (home, away) = homeAwayTeams(from: response) else { return [] }
         func value(_ t: SummaryBoxTeam, _ name: String) -> String? {
             t.statistics?.first { $0.name == name }?.displayValue
         }

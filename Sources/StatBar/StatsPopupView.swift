@@ -745,9 +745,6 @@ struct StatsPopupView: View {
 
     /// Secondary context line for the focused game (period / half text).
     private func contextStat(for match: Match) -> String? {
-        if let situation = match.liveSituation, !situation.isEmpty {
-            return situation
-        }
-        return match.detail.isEmpty ? nil : match.detail
+        match.detail.isEmpty ? nil : match.detail
     }
 }
