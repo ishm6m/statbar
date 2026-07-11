@@ -535,7 +535,7 @@ struct StatsPopupView: View {
     private var offlineBanner: some View {
         HStack(spacing: Theme.Spacing.md) {
             Image(systemName: "wifi.slash").foregroundStyle(.orange)
-            Text("Offline – showing last known scores")
+            Text("Offline, showing last known scores")
                 .font(.caption.weight(.medium))
                 .foregroundStyle(.secondary)
             Spacer()

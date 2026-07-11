@@ -2,8 +2,8 @@
 
 StatBar updates through **GitHub Releases**. The app checks a static
 `version.json` (via `FreeUpdateChecker`) and points "Download Update" at the
-latest release page. No Apple Developer Program, no notarization, no server —
-builds are ad-hoc signed, so users right-click → Open the first time.
+latest release page. No Apple Developer Program, no notarization, no server.
+Builds are ad-hoc signed, so users right-click → Open the first time.
 
 The two things a release touches:
 
@@ -16,12 +16,12 @@ The two things a release touches:
 
 Edit `Info.plist`:
 
-- `CFBundleShortVersionString` — the user-facing version (e.g. `1.2`). This is
+- `CFBundleShortVersionString`: the user-facing version (e.g. `1.2`). This is
   what `FreeUpdateChecker` compares against the manifest.
-- `CFBundleVersion` — the monotonic build number (e.g. `3`).
+- `CFBundleVersion`: the monotonic build number (e.g. `3`).
 
 Keep `CFBundleShortVersionString` equal to the `version` you put in
-`version.json` — otherwise a shipped build prompts users to "update" to itself.
+`version.json`, otherwise a shipped build prompts users to "update" to itself.
 
 ## 2. Build + re-sign + verify + zip
 
@@ -31,11 +31,11 @@ make beta
 
 `make beta`:
 
-1. `scripts/build_local.sh` — assembles `build/StatBar.app` and ad-hoc re-signs
+1. `scripts/build_local.sh`: assembles `build/StatBar.app` and ad-hoc re-signs
    it (launchable on Apple Silicon).
-2. `codesign --verify --deep --strict` — hard-verifies the bundle signature;
+2. `codesign --verify --deep --strict`: hard-verifies the bundle signature;
    any failure aborts before a zip is produced.
-3. `scripts/package_beta.sh` — names the archive from the bundle version
+3. `scripts/package_beta.sh`: names the archive from the bundle version
    (`build/StatBar-v<short>.zip`, or `-build<build>` when the build number
    differs), archives with `ditto -c -k --keepParent`, writes a `.sha256`
    sidecar, and round-trip-verifies the archive re-extracts to a valid signed
@@ -88,7 +88,7 @@ gh release create v1.2 \
 ```
 
 `downloadURL` points at `/releases/latest`, so it resolves to whatever release
-is newest — no need to edit it each time.
+is newest, no need to edit it each time.
 
 ## 5. Verify the update path
 
@@ -101,7 +101,7 @@ Then in-app:
 
 1. Launch a build whose `CFBundleShortVersionString` is **older** than the
    manifest `version`.
-2. **Settings → General → Check for Updates…** — confirm the alert shows current
+2. **Settings → General → Check for Updates…** confirms the alert shows current
    + latest version, release notes, and **Download Update** opens the release page.
 3. Tap the **Version** row 5× to reveal **Debug Information**; confirm **Update
    URL** is the raw `version.json` and the last-check fields are populated.

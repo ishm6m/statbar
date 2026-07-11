@@ -23,21 +23,21 @@
 </div>
 
 StatBar is a lightweight menu-bar agent that puts live scores from the world's
-top football leagues and competitions a glance away — no window to switch to, no
-browser tab. Tap a match for the full story: a complete timeline of goals,
+top football leagues and competitions a glance away, with no window to switch to
+and no browser tab. Tap a match for the full story: a complete timeline of goals,
 cards, and substitutions.
 
 ## Features
 
-- **Always in reach** — scores live in the menu bar, updated in real time.
-- **Smart Focus** — surfaces the game that matters right now (the close one, the
+- **Always in reach.** Scores live in the menu bar, updated in real time.
+- **Smart Focus.** Surfaces the game that matters right now (the close one, the
   one in overtime, the team you follow).
-- **Follow your team** — the menu bar tracks your team: live score → full-time
-  result → next fixture.
-- **Real crests & flags** — official logos fetched live, clean monogram fallback.
-- **Quiet by design** — refreshes fast when games are live, sleeps when they're
+- **Follow your team.** The menu bar tracks your team: live score, then full-time
+  result, then next fixture.
+- **Real crests & flags.** Official logos fetched live, clean monogram fallback.
+- **Quiet by design.** Refreshes fast when games are live, sleeps when they're
   not. Native, lightweight, battery-friendly.
-- **Notifications** — match starting, goals, and final scores.
+- **Notifications.** Match starting, goals, and final scores.
 
 <table>
   <tr>
@@ -83,11 +83,11 @@ The bundle lands in `build/`. `make` runs the release build and packages it.
 
 ## Project layout
 
-- `Sources/StatBar/` — the app (SwiftUI + AppKit menu-bar agent).
-- `Tests/` — unit tests (`swift test`).
-- `Resources/` — assets bundled into the app.
-- `site/` — marketing landing page (Next.js).
-- `version.json` — update manifest read by the in-app update checker.
+- `Sources/StatBar/`: the app (SwiftUI + AppKit menu-bar agent).
+- `Tests/`: unit tests (`swift test`).
+- `Resources/`: assets bundled into the app.
+- `site/`: marketing landing page (Next.js).
+- `version.json`: update manifest read by the in-app update checker.
 
 ## License
 

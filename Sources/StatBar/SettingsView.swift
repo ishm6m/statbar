@@ -156,7 +156,7 @@ struct SettingsView: View {
                 .toggleStyle(.switch)
             Text(viewModel.autoFocusEnabled
                  ? "StatBar automatically surfaces the most relevant live game."
-                 : "Auto Focus is off — the game you pick in the popup stays put.")
+                 : "Auto Focus is off. The game you pick in the popup stays put.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

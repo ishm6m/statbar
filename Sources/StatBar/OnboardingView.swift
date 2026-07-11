@@ -224,7 +224,7 @@ struct OnboardingView: View {
 
     private var teamsStep: some View {
         stepScaffold(title: "Follow your teams",
-                     subtitle: "Optional — followed teams get priority and a brand-colored highlight.") {
+                     subtitle: "Optional. Followed teams get priority and a brand-colored highlight.") {
             VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
                 searchField
 
