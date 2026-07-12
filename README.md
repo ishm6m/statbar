@@ -48,6 +48,14 @@ cards, and substitutions.
     <td align="center"><b>Every match, one glance</b></td>
     <td align="center"><b>Full match timeline</b></td>
   </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/stats.png" alt="Match stats: fouls, cards, possession, and shots"></td>
+    <td width="50%"><img src="docs/images/settings.png" alt="StatBar settings with menu-bar style and league toggles"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Stats, lineups, and tables</b></td>
+    <td align="center"><b>Your leagues, your style</b></td>
+  </tr>
 </table>
 
 **Leagues:** Premier League, La Liga, Serie A, Bundesliga, Ligue 1, MLS, EFL

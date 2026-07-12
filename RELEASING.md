@@ -15,7 +15,7 @@ The two things a release touches:
 ## 1. Bump the version
 
 ```sh
-scripts/set_version.sh 1.2 "• Fixed NHL scores\n• Faster launch"
+scripts/set_version.sh 1.2 "• Fixed missed goal alerts\n• Faster launch"
 ```
 
 One command stamps everything that must agree:
@@ -26,7 +26,7 @@ One command stamps everything that must agree:
 - `version.json` `version` + `publishedAt`, and `releaseNotes` when passed.
 
 If the plist and manifest versions ever differ, a shipped build prompts users
-to "update" to itself — that is why the script is the only supported way to bump.
+to "update" to itself. That is why the script is the only supported way to bump.
 
 ## 2. Build + re-sign + verify + zip
 
@@ -59,7 +59,7 @@ optional fields if needed:
 {
   "version": "1.2",
   "downloadURL": "https://github.com/ishm6m/statbar/releases/latest",
-  "releaseNotes": "• Fixed NHL scores\n• Faster launch",
+  "releaseNotes": "• Fixed missed goal alerts\n• Faster launch",
   "minimumSupported": "1.0",
   "publishedAt": "2026-06-28T12:00:00Z"
 }
@@ -91,7 +91,7 @@ git push
 gh release create v1.2 \
   build/StatBar.app.zip build/StatBar.app.zip.sha256 \
   --title "v1.2" \
-  --notes "• Fixed NHL scores\n• Faster launch"
+  --notes "• Fixed missed goal alerts\n• Faster launch"
 ```
 
 `downloadURL` points at `/releases/latest`, so it resolves to whatever release
