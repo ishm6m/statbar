@@ -158,7 +158,7 @@ final class NotificationService: NSObject {
         guard dedup.shouldSend(id) else { return }
         let clock = match.gameClock.isEmpty ? "" : " (\(match.gameClock))"
         post(
-            title: "\(match.sport.emoji) \(scoreWord(for: match.sport))",
+            title: "\(match.sport.emoji) GOAL!",
             body: "\(match.homeTeam) \(match.homeScore)-\(match.awayScore) \(match.awayTeam)\(clock)",
             timeSensitive: false
         )
@@ -198,11 +198,6 @@ final class NotificationService: NSObject {
             body: "\(leader) now lead \(match.homeTeam) \(match.homeScore)-\(match.awayScore) \(match.awayTeam)",
             timeSensitive: false
         )
-    }
-
-    /// Word for a scoring event.
-    private func scoreWord(for sport: Sport) -> String {
-        "GOAL!"
     }
 
     // MARK: - Posting

@@ -81,33 +81,12 @@ struct Match: Codable, Equatable {
         return "\(day) \(time)"
     }
 
-    var displayLabel: String {
-        if isFinal {
-            return "FT: \(homeTeam) \(homeScore) - \(awayTeam) \(awayScore)"
-        }
-        if isLive {
-            return "\(homeTeam) \(homeScore)-\(awayScore)"
-        }
-        return "\(homeTeam) vs \(awayTeam)"
-    }
-
-    var excitementScore: Int {
-        switch status.lowercased() {
-        case "live": return 100
-        case "final": return 60
-        default: return 20
-        }
-    }
 }
 
 actor APIService {
     static let shared = APIService()
 
     private init() {}
-
-    func fetchMatches() async -> [Match] {
-        await fetchAllMatches()
-    }
 
     func fetchAllMatches() async -> [Match] {
         let leagues = await UserPreferencesManager.shared.activeLeagues
@@ -157,7 +136,7 @@ actor APIService {
 
     private func fetchESPNMatches(for league: LeagueDefinition) async -> [Match] {
         guard let url = Config.API.espnScoreboard(
-            sportSlug: LeagueDefinition.espnSportSlug, leagueSlug: league.espnLeagueSlug
+            sportSlug: LeagueDefinition.espnSportSlug, leagueSlug: league.id
         ) else { return loadCachedMatches(for: league.id) }
 
         do {
@@ -183,7 +162,7 @@ actor APIService {
     /// (the empty-state caller).
     func fetchStandings(for league: LeagueDefinition, highlight: String? = nil) async -> [StandingsRow] {
         guard let url = Config.API.espnStandings(
-            sportSlug: LeagueDefinition.espnSportSlug, leagueSlug: league.espnLeagueSlug
+            sportSlug: LeagueDefinition.espnSportSlug, leagueSlug: league.id
         ) else { return [] }
 
         do {
@@ -270,7 +249,7 @@ actor APIService {
 
     private func fetchTeamSchedule(league: LeagueDefinition, teamID: String, season: Int? = nil) async -> [TeamGame] {
         guard let url = Config.API.espnTeamSchedule(
-            sportSlug: LeagueDefinition.espnSportSlug, leagueSlug: league.espnLeagueSlug,
+            sportSlug: LeagueDefinition.espnSportSlug, leagueSlug: league.id,
             teamId: teamID, season: season
         ) else { return [] }
         do {
@@ -597,7 +576,7 @@ actor APIService {
               let eventID = match.espnEventID,
               let url = Config.API.espnSummary(
                   sportSlug: LeagueDefinition.espnSportSlug,
-                  leagueSlug: league.espnLeagueSlug,
+                  leagueSlug: league.id,
                   event: eventID
               ) else { return nil }
 
@@ -761,7 +740,6 @@ actor APIService {
             return KeyEvent(
                 id: e.id ?? "\(index)",
                 clock: e.clock?.displayValue ?? "",
-                typeText: typeText,
                 text: e.text ?? typeText,
                 kind: KeyEvent.Kind.from(typeText: typeText)
             )

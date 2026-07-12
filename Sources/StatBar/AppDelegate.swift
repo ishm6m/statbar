@@ -81,14 +81,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Non-critical initialization, run after the menu bar item is on screen.
     private func completeStartup() {
-        // Drop any sport that was enabled before its live feed was deferred, and
-        // tell the user why (once). Runs before onboarding so returning users see
-        // a clean, supported-only list.
-        let disabled = UserPreferencesManager.shared.disableUnsupportedLeagues()
-        if !disabled.isEmpty {
-            explainDisabledLeagues(disabled)
-        }
-
         // Updates: launch stays quiet unless checkOnLaunch is set.
         if Config.Updates.checkOnLaunch {
             FreeUpdateChecker.shared.checkForUpdatesInBackground()
@@ -146,21 +138,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         refreshManager.start()
     }
 
-    /// Tell the user a league was turned off because its feed is no longer
-    /// available. `names` are league display names.
-    private func explainDisabledLeagues(_ names: [String]) {
-        let list = names.joined(separator: ", ")
-        let one = names.count == 1
-        let alert = NSAlert()
-        alert.messageText = one ? "\(list) is unavailable" : "Some leagues are unavailable"
-        alert.informativeText = "Live scores for \(list) aren't available right now, so "
-            + "\(one ? "it has" : "they've") been turned off. "
-            + "We'll re-enable \(one ? "it" : "them") automatically once the feed returns."
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
-    }
-
     /// First launch: run onboarding, which requests notification permission at
     /// its final step. Returning users skip straight to the permission prompt.
     private func presentOnboardingIfNeeded() {
@@ -181,7 +158,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard let button = statusItem.button else { return }
 
         let prefs = UserPreferencesManager.shared
-        let enabledLeagues = prefs.visibleLeagueIDs
+        let enabledLeagues = prefs.enabledLeagues
 
         // Smart Focus: rank visible matches by relevance (followed team, live,
         // close score, overtime, leader) so the most worth-watching event lands
@@ -416,10 +393,5 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func togglePopup(_ sender: AnyObject?) {
         popupController.show()
-    }
-
-    @objc private func quitApp(_ sender: AnyObject?) {
-        refreshManager.stop()
-        NSApp.terminate(nil)
     }
 }

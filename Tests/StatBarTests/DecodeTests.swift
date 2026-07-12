@@ -7,7 +7,7 @@ import XCTest
 /// defensive fallbacks for tomorrow's.
 final class DecodeTests: XCTestCase {
     private let premierLeague = LeagueDefinition(
-        id: "eng.1", sport: .soccer, espnLeagueSlug: "eng.1", displayName: "Premier League"
+        id: "eng.1", sport: .soccer, displayName: "Premier League"
     )
 
     private func fixture(_ name: String) throws -> Data {
@@ -52,8 +52,7 @@ final class DecodeTests: XCTestCase {
     /// Real Champions League semifinal: knockout stage + leg note surface.
     func testDecodeScoreboardKnockout() throws {
         let ucl = LeagueDefinition(
-            id: "uefa.champions", sport: .soccer,
-            espnLeagueSlug: "uefa.champions", displayName: "Champions League"
+            id: "uefa.champions", sport: .soccer, displayName: "Champions League"
         )
         let matches = try APIService.shared.decodeESPNMatches(
             from: fixture("scoreboard-ucl-semifinal"), league: ucl

@@ -62,7 +62,7 @@ final class DataRefreshManager {
 
         Task {
             let started = Date()
-            let matches = await apiService.fetchMatches()
+            let matches = await apiService.fetchAllMatches()
             let latency = Date().timeIntervalSince(started)
 
             await MainActor.run {

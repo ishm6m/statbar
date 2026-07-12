@@ -7,21 +7,19 @@ import Foundation
 /// section headers) — so a league carries both its own identity and its family.
 ///
 /// ESPN's scoreboard endpoint is addressed by two path segments,
-/// `sports/{espnSportSlug}/{espnLeagueSlug}/scoreboard`, which is all the
-/// routing the provider needs. Adding a league that shares ESPN's uniform
-/// scoreboard schema is therefore a one-line catalog change, not new code.
+/// `sports/{espnSportSlug}/{id}/scoreboard`, which is all the routing the
+/// provider needs. Adding a league that shares ESPN's uniform scoreboard
+/// schema is therefore a one-line catalog change, not new code.
 struct LeagueDefinition: Identifiable, Hashable, Sendable {
     /// ESPN path segment for the sport family. StatBar is soccer-only, so every
     /// league shares this — one constant rather than a per-row column.
     static let espnSportSlug = "soccer"
 
-    /// Stable slug used for persistence, cache keys, and `Match.league`. Equal to
-    /// the ESPN league slug for the leagues shipped today (e.g. "nfl", "eng.1").
+    /// ESPN league slug ("eng.1", "uefa.champions", …), doubling as the stable
+    /// id for persistence, cache keys, and `Match.league`.
     let id: String
     /// Sport category — supplies emoji, focus thresholds, and UI grouping.
     let sport: Sport
-    /// ESPN path segment for the league ("nfl", "eng.1", "uefa.champions", …).
-    let espnLeagueSlug: String
-    /// User-facing name ("NFL", "Premier League").
+    /// User-facing name ("Premier League").
     let displayName: String
 }

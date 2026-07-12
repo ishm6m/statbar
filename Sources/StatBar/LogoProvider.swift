@@ -8,12 +8,11 @@ import SwiftUI
 enum LogoKind: String, Sendable {
     case team
     case league
-    case country
 }
 
 /// Stable, hashable identity for one logo. `id` is the caller-supplied stable
-/// identifier (team abbreviation, league id, ISO country code). `sport` is only
-/// needed for team logos, whose remote URL is league-scoped on ESPN's CDN.
+/// identifier (team abbreviation or league id). `sport` is only needed for
+/// team logos, whose remote URL is league-scoped on ESPN's CDN.
 struct LogoDescriptor: Hashable, Sendable {
     let kind: LogoKind
     let id: String
@@ -70,24 +69,11 @@ struct LogoDescriptor: Hashable, Sendable {
         switch kind {
         case .team:
             if let overrideURL, let url = URL(string: overrideURL) { return url }
-            guard let league = sport?.espnLeagueSlug, !id.isEmpty else { return nil }
-            return URL(string: "https://a.espncdn.com/i/teamlogos/\(league)/500/\(id.lowercased()).png")
+            guard sport != nil, !id.isEmpty else { return nil }
+            return URL(string: "https://a.espncdn.com/i/teamlogos/\(LeagueDefinition.espnSportSlug)/500/\(id.lowercased()).png")
         case .league:
             guard !id.isEmpty else { return nil }
             return URL(string: "https://a.espncdn.com/i/teamlogos/leagues/500/\(id.lowercased()).png")
-        case .country:
-            guard !id.isEmpty else { return nil }
-            return URL(string: "https://flagcdn.com/w160/\(id.lowercased()).png")
-        }
-    }
-}
-
-extension Sport {
-    /// ESPN CDN league slug for team-logo URLs. Sports without ESPN logo
-    /// coverage return nil and fall back to the placeholder.
-    var espnLeagueSlug: String? {
-        switch self {
-        case .soccer: return "soccer"
         }
     }
 }
@@ -175,10 +161,6 @@ final class LogoProvider {
 
     func logo(forLeagueID id: String) -> LogoHandle {
         handle(for: LogoDescriptor(kind: .league, id: id))
-    }
-
-    func logo(forCountryCode code: String) -> LogoHandle {
-        handle(for: LogoDescriptor(kind: .country, id: code))
     }
 
     /// Synchronous in-memory lookup for callers that can't observe a `LogoHandle`
@@ -561,14 +543,6 @@ struct LogoView: View {
         _handle = StateObject(wrappedValue: LogoProvider.shared.logo(forLeagueID: leagueID))
         self.size = size
         let resolved = label ?? leagueID
-        self.label = resolved
-        self.monogram = logoMonogram(from: resolved)
-    }
-
-    init(countryCode: String, label: String? = nil, size: CGFloat = 20) {
-        _handle = StateObject(wrappedValue: LogoProvider.shared.logo(forCountryCode: countryCode))
-        self.size = size
-        let resolved = label ?? countryCode
         self.label = resolved
         self.monogram = logoMonogram(from: resolved)
     }

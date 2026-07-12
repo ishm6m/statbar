@@ -9,7 +9,6 @@ final class UserPreferencesManager {
     private let sportOrderKey = "StatBarSportOrder"
     private let enabledSportsKey = "StatBarEnabledSports"   // legacy — read once to migrate
     private let enabledLeaguesKey = "StatBarEnabledLeagues"
-    private let favouriteSportKey = "StatBarFavouriteSport"
     private let displayModeKey = "StatBarDisplayMode"
     private let followedTeamsKey = "StatBarFollowedTeams"
     private let notifyMatchStartingKey = "StatBarNotifyMatchStarting"
@@ -54,12 +53,12 @@ final class UserPreferencesManager {
     var enabledLeagues: Set<String> {
         get {
             if let raw = defaults.array(forKey: enabledLeaguesKey) as? [String] {
-                let kept = Set(raw).intersection(Set(LeagueCatalog.supported.map(\.id)))
+                let kept = Set(raw).intersection(Set(LeagueCatalog.all.map(\.id)))
                 return kept.isEmpty ? Self.defaultLeagues : kept
             }
             // Migrate any legacy enabledSports set; non-soccer ids drop out.
             if let legacy = defaults.array(forKey: enabledSportsKey) as? [String] {
-                let supported = Set(LeagueCatalog.supported.map(\.id))
+                let supported = Set(LeagueCatalog.all.map(\.id))
                 let migrated = Set(legacy).intersection(supported)
                 return migrated.isEmpty ? Self.defaultLeagues : migrated
             }
@@ -76,7 +75,7 @@ final class UserPreferencesManager {
     var activeLeagues: [LeagueDefinition] {
         let enabled = enabledLeagues
         let sportRank = Dictionary(uniqueKeysWithValues: sportOrder.enumerated().map { ($1, $0) })
-        return LeagueCatalog.supported
+        return LeagueCatalog.all
             .filter { enabled.contains($0.id) }
             .enumerated()
             .sorted { lhs, rhs in
@@ -88,26 +87,6 @@ final class UserPreferencesManager {
             .map(\.element)
     }
 
-    /// Enabled, supported leagues for one sport category, in priority order.
-    /// Backs the popup's league sub-tabs (shown only when a sport has more than
-    /// one enabled league, e.g. Soccer).
-    func activeLeagues(for sport: Sport) -> [LeagueDefinition] {
-        activeLeagues.filter { $0.sport == sport }
-    }
-
-    /// Sport categories present in the active leagues, in priority order. Backs
-    /// the popup tabs and the Smart Focus / notification visibility filters.
-    var activeSports: [Sport] {
-        var seen = Set<Sport>()
-        return activeLeagues.compactMap { seen.insert($0.sport).inserted ? $0.sport : nil }
-    }
-
-    /// League ids the menu bar and popup show — every enabled league.
-    var visibleLeagueIDs: Set<String> { enabledLeagues }
-
-    /// Enabled leagues, drives the popup's league dropdown.
-    var visibleLeagues: [LeagueDefinition] { activeLeagues }
-
     func toggleLeague(_ id: String) {
         var enabled = enabledLeagues
         if enabled.contains(id) {
@@ -118,44 +97,6 @@ final class UserPreferencesManager {
             enabled.insert(id)
         }
         enabledLeagues = enabled
-    }
-
-    /// One-time cleanup for upgraders who had a league enabled that has since
-    /// been removed from the catalog. Strips those ids. Returns the disabled
-    /// leagues' display names so the caller can explain the change. No-op when
-    /// nothing to fix.
-    @discardableResult
-    func disableUnsupportedLeagues() -> [String] {
-        let enabled = enabledLeagues
-        let supported = Set(LeagueCatalog.supported.map(\.id))
-        let removed = enabled.subtracting(supported)
-        guard !removed.isEmpty else { return [] }
-
-        enabledLeagues = enabled.intersection(supported)
-        // Resolve names where we still can; fall back to the raw id.
-        return removed.map { LeagueCatalog.byID($0)?.displayName ?? $0 }
-    }
-
-    func isLeagueEnabled(_ id: String) -> Bool {
-        enabledLeagues.contains(id)
-    }
-
-    func moveSports(fromOffsets source: IndexSet, toOffset destination: Int) {
-        var order = sportOrder
-        order.move(fromOffsets: source, toOffset: destination)
-        sportOrder = order
-    }
-
-    var favouriteSport: Sport? {
-        get {
-            guard let rawValue = defaults.string(forKey: favouriteSportKey) else {
-                return .soccer
-            }
-            return Sport(rawValue: rawValue)
-        }
-        set {
-            defaults.set(newValue?.rawValue, forKey: favouriteSportKey)
-        }
     }
 
     // MARK: - Display

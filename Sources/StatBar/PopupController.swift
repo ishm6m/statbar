@@ -39,7 +39,6 @@ final class PopupController: NSObject, ObservableObject {
     /// "No games" empty state.
     @Published var hasLoaded = false
     @Published var flash = false
-    @Published var launchAtLogin = LaunchAtLogin.isEnabled
     /// Popup navigation: the active league filter. `nil` = all enabled leagues
     /// across every sport (the "All" scope). Otherwise a single league id. One
     /// flat filter replaces the old two-row sport+league tab model.
@@ -143,7 +142,7 @@ final class PopupController: NSObject, ObservableObject {
     /// scope (no single table to pick — the popup keeps its league suggestions).
     var emptyStandingsLeague: LeagueDefinition? {
         if let id = selectedLeagueID { return LeagueCatalog.byID(id) }
-        let visible = UserPreferencesManager.shared.visibleLeagues
+        let visible = UserPreferencesManager.shared.activeLeagues
         return visible.count == 1 ? visible.first : nil
     }
 
@@ -171,13 +170,13 @@ final class PopupController: NSObject, ObservableObject {
     /// filter to "All" when the chosen league is no longer enabled.
     private func syncSelectionToAvailable() {
         if let id = selectedLeagueID,
-           !UserPreferencesManager.shared.visibleLeagueIDs.contains(id) {
+           !UserPreferencesManager.shared.enabledLeagues.contains(id) {
             selectedLeagueID = nil
         }
     }
 
     var visibleMatches: [Match] {
-        let visible = UserPreferencesManager.shared.visibleLeagueIDs
+        let visible = UserPreferencesManager.shared.enabledLeagues
         return matches.filter { visible.contains($0.league) }
     }
 
@@ -211,22 +210,12 @@ final class PopupController: NSObject, ObservableObject {
                                  affinity: UserPreferencesManager.shared.interestScores)
     }
 
-    /// The sport category of the active league filter, or nil in the "All" scope.
-    /// Drives the empty-state copy (off-season message) when one league is picked.
-    var scopeSport: Sport? {
-        selectedLeagueID.flatMap(LeagueCatalog.byID)?.sport
-    }
-
-    /// Sets the league filter (`nil` = all leagues across sports). Points
-    /// `favouriteSport` at the chosen league's sport (Smart Focus tie-break) and
-    /// drops a manual focus pin that the new scope would hide, so the hero can't
-    /// keep showing an out-of-scope game.
+    /// Sets the league filter (`nil` = all leagues across sports). Drops a
+    /// manual focus pin that the new scope would hide, so the hero can't keep
+    /// showing an out-of-scope game.
     func selectLeague(_ leagueID: String?) {
         selectedLeagueID = leagueID
         let prefs = UserPreferencesManager.shared
-        if let league = leagueID.flatMap(LeagueCatalog.byID) {
-            prefs.favouriteSport = league.sport
-        }
         if let leagueID, let pinnedID = prefs.manualFocusMatchID,
            !matches.contains(where: { $0.matchID == pinnedID && $0.league == leagueID }) {
             prefs.manualFocusMatchID = nil
@@ -251,12 +240,6 @@ final class PopupController: NSObject, ObservableObject {
         return MatchFocus.primary(scope, followedTeams: prefs.followedTeams, affinity: prefs.interestScores)
     }
 
-    /// The soonest upcoming (not yet started) match in the current scope, used
-    /// for the empty state when nothing is live or final.
-    var nextScheduledMatch: Match? {
-        rankedCurrentMatches.first { !$0.isLive && !$0.isFinal }
-    }
-
     /// Pins `match` as the manual focus and turns Auto Focus off so the choice
     /// sticks. Moves the popup scope to that match's sport/league so the hero and
     /// list both reflect it.
@@ -267,7 +250,6 @@ final class PopupController: NSObject, ObservableObject {
         let prefs = UserPreferencesManager.shared
         prefs.autoFocusEnabled = false
         prefs.manualFocusMatchID = match.matchID
-        prefs.favouriteSport = match.sport
         // If a league filter is active and would hide this game, widen to "All"
         // so the pinned game stays visible in the list.
         if let id = selectedLeagueID, id != match.league { selectedLeagueID = nil }
@@ -330,40 +312,29 @@ final class PopupController: NSObject, ObservableObject {
             .sorted { ($0.kickoff ?? .distantPast) > ($1.kickoff ?? .distantPast) }
     }
 
-    func toggleLaunchAtLogin() {
-        LaunchAtLogin.isEnabled.toggle()
-        launchAtLogin = LaunchAtLogin.isEnabled
-    }
-
     func openSettings() {
         dismiss()
         onOpenSettings?()
     }
 
-    /// Supported leagues that are likely playing right now but aren't enabled —
-    /// what the empty state offers when the user's own leagues are off-season.
-    /// One league per in-season sport (the catalog's top pick) so the suggestion
-    /// stays short. Empty when everything in season is already on.
+    /// Leagues that aren't enabled — what the empty state offers when the
+    /// user's own leagues have nothing on. One league per sport (the catalog's
+    /// top pick) so the suggestion stays short.
     var suggestedInSeasonLeagues: [LeagueDefinition] {
-        let prefs = UserPreferencesManager.shared
-        let enabled = prefs.enabledLeagues
+        let enabled = UserPreferencesManager.shared.enabledLeagues
         var seenSport = Set<Sport>()
-        return LeagueCatalog.supported.filter { league in
-            guard league.sport.isInSeason(),
-                  !enabled.contains(league.id),
+        return LeagueCatalog.all.filter { league in
+            guard !enabled.contains(league.id),
                   seenSport.insert(league.sport).inserted else { return false }
             return true
         }
     }
 
-    /// Enables `league` from the empty-state suggestion, points the popup at its
-    /// sport, and kicks an immediate refresh so games appear without a settings
-    /// detour.
+    /// Enables `league` from the empty-state suggestion, points the popup at it,
+    /// and kicks an immediate refresh so games appear without a settings detour.
     func enableSuggestedLeague(_ league: LeagueDefinition) {
-        let prefs = UserPreferencesManager.shared
-        prefs.toggleLeague(league.id)
+        UserPreferencesManager.shared.toggleLeague(league.id)
         selectedLeagueID = league.id
-        prefs.favouriteSport = league.sport
         objectWillChange.send()
         onFocusChanged?()
         onRefresh?()

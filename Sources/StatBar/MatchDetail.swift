@@ -238,35 +238,16 @@ struct KeyEvent: Identifiable, Equatable, Sendable {
     let id: String
     /// Clock/period label, e.g. "25'".
     let clock: String
-    /// Short type label from the feed, e.g. "Goal", "Yellow Card".
-    let typeText: String
     /// Full human sentence, e.g. "Goal! Aston Villa 0, Wolves 1. Matheus Cunha…"
     let text: String
     /// Coarse kind, drives the leading glyph + tint.
     let kind: Kind
-    /// Scoring team abbreviation, when the feed names one.
-    let teamAbbrev: String?
-    /// Running score after this play, e.g. "2-1"; nil when the score lives in `text`.
-    let runningScore: String?
-
-    init(id: String, clock: String, typeText: String, text: String, kind: Kind,
-         teamAbbrev: String? = nil, runningScore: String? = nil) {
-        self.id = id
-        self.clock = clock
-        self.typeText = typeText
-        self.text = text
-        self.kind = kind
-        self.teamAbbrev = teamAbbrev
-        self.runningScore = runningScore
-    }
 
     enum Kind: Sendable {
         case goal
         case yellowCard
         case redCard
         case substitution
-        /// A generic score in a non-soccer sport (kept for compatibility).
-        case score
         case other
 
         /// SF Symbol shown at the row's leading edge.
@@ -275,7 +256,6 @@ struct KeyEvent: Identifiable, Equatable, Sendable {
             case .goal: return "soccerball"
             case .yellowCard, .redCard: return "rectangle.portrait.fill"
             case .substitution: return "arrow.left.arrow.right"
-            case .score: return "circle.fill"
             case .other: return "circle.fill"
             }
         }

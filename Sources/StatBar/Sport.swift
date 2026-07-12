@@ -20,18 +20,4 @@ enum Sport: String, CaseIterable, Codable {
         case .soccer: return "⚽"
         }
     }
-
-    /// Calendar months (1–12) this sport is typically in season. Soccer spans the
-    /// globe (some league is always running), so it's year-round.
-    var inSeasonMonths: Set<Int> {
-        switch self {
-        case .soccer: return Set(1...12)
-        }
-    }
-
-    /// Whether this sport is likely playing on `date` (default: now).
-    func isInSeason(on date: Date = Date()) -> Bool {
-        inSeasonMonths.contains(Calendar.current.component(.month, from: date))
-    }
-
 }

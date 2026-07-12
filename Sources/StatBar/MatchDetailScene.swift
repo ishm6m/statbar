@@ -249,7 +249,7 @@ struct MatchDetailScene: View {
     }
 
     private func eventRow(_ event: KeyEvent) -> some View {
-        let emphasised = event.kind == .goal || event.kind == .score
+        let emphasised = event.kind == .goal
         return HStack(alignment: .top, spacing: Theme.Spacing.md) {
             Text(event.clock.isEmpty ? "·" : event.clock)
                 .font(.caption2.weight(.bold))
@@ -288,7 +288,7 @@ struct MatchDetailScene: View {
 
     private func glyphTint(_ kind: KeyEvent.Kind) -> Color {
         switch kind {
-        case .goal, .score: return Color.accentColor
+        case .goal: return Color.accentColor
         case .yellowCard: return .yellow
         case .redCard: return .red
         case .substitution: return .green

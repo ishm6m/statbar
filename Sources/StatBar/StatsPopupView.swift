@@ -164,7 +164,7 @@ struct StatsPopupView: View {
     /// sport scope; each enabled league narrows to it.
     @ViewBuilder
     private var leagueFilter: some View {
-        let leagues = prefs.visibleLeagues
+        let leagues = prefs.activeLeagues
         if leagues.count > 1 {
             Menu {
                 Button {
@@ -609,21 +609,16 @@ struct StatsPopupView: View {
         }
     }
 
-    /// Truly nothing in scope — no live, final, or scheduled matches. When the
-    /// selected sport is simply between seasons, say so honestly and offer the
+    /// Truly nothing in scope — no live, final, or scheduled matches. Offer the
     /// leagues that *are* playing right now (one tap to add + refresh), instead
     /// of implying the feed is broken.
     private var suggestionEmptyState: some View {
-        let scopeSport = controller.scopeSport
-        let offSeason = scopeSport.map { !$0.isInSeason() } ?? false
         let suggestions = Array(controller.suggestedInSeasonLeagues.prefix(3))
 
         return VStack(spacing: Theme.Spacing.md) {
             AppLogoView(size: 44).opacity(0.9)
 
-            Text(offSeason
-                 ? "\(controller.scopeSport?.displayName ?? "This league") is off-season"
-                 : "No games right now")
+            Text("No games right now")
                 .font(.headline)
                 .multilineTextAlignment(.center)
 
