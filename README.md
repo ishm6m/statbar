@@ -97,6 +97,13 @@ The bundle lands in `build/`. `make` runs the release build and packages it.
 - `site/`: marketing landing page (Next.js).
 - `version.json`: update manifest read by the in-app update checker.
 
+## Author
+
+Built by Shahriyar Ishmam.
+
+- Website: https://ishmam-os.vercel.app/
+- LinkedIn: https://www.linkedin.com/in/shahriyar-ishmam/
+
 ## License
 
 [MIT](LICENSE) © 2026 StatBar contributors.
