@@ -101,7 +101,7 @@ The bundle lands in `build/`. `make` runs the release build and packages it.
 
 Built by Shahriyar Ishmam.
 
-- Website: [ishmam-os.vercel.app](https://ishmam-os.vercel.app/)
+- Website: [ishmam](https://ishmam-os.vercel.app/)
 - LinkedIn: [shahriyar-ishmam](https://www.linkedin.com/in/shahriyar-ishmam/)
 
 ## License
